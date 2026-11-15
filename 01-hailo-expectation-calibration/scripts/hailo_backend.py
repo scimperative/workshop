@@ -83,8 +83,10 @@ class HailoBackend:
         self.target = self.stack.enter_context(VDevice())
         cfg = ConfigureParams.create_from_hef(self.hef, interface=HailoStreamInterface.PCIe)
         if self.device_batch > 1:  # device-side batch (context-switch amortisation). Default 1 = pre-registered config.
-            for name in cfg.network_group_params:
-                cfg.network_group_params[name].batch_size = self.device_batch
+            # create_from_hef returns {network_group_name: ConfigureNetworkParams} on HailoRT 4.20
+            groups = cfg.values() if isinstance(cfg, dict) else cfg.network_group_params.values()
+            for p in groups:
+                p.batch_size = self.device_batch
         self.ng = self.target.configure(self.hef, cfg)[0]
         self.ng_params = self.ng.create_params()
         in_p = self._vparams(InputVStreamParams, self.ng, FormatType.UINT8)
