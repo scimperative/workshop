@@ -9,3 +9,7 @@ Logged 2026-11-15T17:12:15Z. This addendum does not change the frozen prediction
 - Accuracy is a proxy (INT8/FP32 agreement on the COCO-500 images), not ImageNet top-1. Labelled as such in results.
 - Ops per inference is taken from the exported graph (MACs vs FLOPs stated explicitly).
 - Scope: Hailo-8L, HailoRT 4.20.0, firmware 4.20.0, one model, one toolchain version. No generalisation.
+
+## LLM CPU baseline prediction (frozen 2026-11-15T17:16:30Z, before any LLM run)
+- Llama-3.2-1B-Instruct Q4_K_M, llama.cpp, Pi 5 CPU only, 4 threads, HAT not used.
+- Predicted generation: 11 tok/s (80% interval 8-16). Predicted prompt processing: 60 tok/s (40-120).
