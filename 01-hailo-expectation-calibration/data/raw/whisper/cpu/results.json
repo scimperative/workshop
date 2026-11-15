@@ -1,0 +1,23 @@
+[
+  {
+    "clip": 1,
+    "audio_duration": 5.0,
+    "inference_time": 1.5142126083374023,
+    "rtf": 0.3028425216674805,
+    "text": " you"
+  },
+  {
+    "clip": 2,
+    "audio_duration": 5.0,
+    "inference_time": 1.5043847560882568,
+    "rtf": 0.30087695121765134,
+    "text": " you"
+  },
+  {
+    "clip": 3,
+    "audio_duration": 5.0,
+    "inference_time": 1.4981298446655273,
+    "rtf": 0.29962596893310545,
+    "text": " you"
+  }
+]

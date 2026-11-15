@@ -1,0 +1,16 @@
+Architecture: hailo8l
+Variant: Whisper tiny
+Encoder: /usr/local/hailo/resources/models/hailo8l/tiny-whisper-encoder-10s_15dB_h8l.hef
+Decoder: /usr/local/hailo/resources/models/hailo8l/tiny-whisper-decoder-fixed-sequence-matmul-split_h8l.hef
+
+Initializing Whisper pipeline...
+✓ Ready (chunk length: 10s)
+
+Loading: data/raw/whisper/clips/clip_3.wav
+✓ Loaded (5.0s)
+Transcribing (1 chunk(s), gain 0.50→0.90)...
+--------------------------------------------------
+[Bell].
+--------------------------------------------------
+(0.4s)
+Done.
