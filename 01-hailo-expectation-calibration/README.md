@@ -1,5 +1,27 @@
 # Workshop 01: Calibrating Expectations for Raspberry Pi 5 + Hailo AI HAT+
 
+## Status (2026-11-15): complete for the scope below
+
+**Question:** is the Raspberry Pi AI HAT+ (Hailo-8L, 13 TOPS) good for AI? One device (Raspberry Pi 5 + HAT), several workloads, no other hardware.
+
+| Workload | Runs on HAT? | Result |
+|---|---|---|
+| YOLOv8n 640x640, model-only | Yes | 107.4 FPS |
+| YOLOv8n end-to-end (decode + NMS) | Yes | 100.6 FPS |
+| NPU utilisation (YOLOv8n) | Yes | 7.2% of rated 13 TOPS |
+| Llama-3.2-1B Q4_K_M (llama.cpp) | No, CPU only | 14.3 tok/s generation, 88.1 tok/s prompt processing |
+| DeiT-tiny vision transformer | Not tested | Hailo compiler needs an x86 machine; none used in this run |
+
+**Verdict (provisional):** good at CNN vision, and there is no evidence here that the HAT helps with LLMs. The LLM test ran on the CPU alone, and transformer support on the Hailo-8L was not tested.
+
+**Read before citing:**
+- The YOLOv8n predictions were set after pilot runs on the same rig, so the 4/4 interval hit rate is pilot-informed, not a blind forecast. The bottleneck call (predicted host CPU, measured NPU-side) was a miss.
+- Energy, power and p95 latency were not measured. The PCIe Gen 2 vs Gen 3 test was not run.
+- The pre-registration was tagged (`prereg-01`) after the YOLOv8n runs and has no independent deposit. See `protocol/deviations.md`.
+- Scope: one Pi 5, one Hailo-8L, HailoRT/firmware 4.20.0. Do not generalise to other Hailo products.
+
+Full write-up: `results/summary.md`. Scorecard: `results/scorecard.md`. Raw data: `data/raw/`.
+
 Pre-registered measurement of YOLOv8n (640x640, INT8) on a Raspberry Pi 5 with the **AI HAT+ (Hailo-8L, 13 TOPS)**.
 See `protocol/protocol.md` for the run procedure and `pre-registration/` for the frozen predictions.
 
