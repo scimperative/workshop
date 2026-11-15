@@ -1,6 +1,6 @@
 ﻿# Silicon Carbide Imperative Workshop
 
-![Silicon Carbide Imperative Workshop](assets/workshop_01.png)
+![Silicon Carbide Imperative Workshop](assets/workshop_01.jpg)
 
 > **A public, accumulating record of pre-registered physical measurements that test first-principles models against real hardware.**
 
