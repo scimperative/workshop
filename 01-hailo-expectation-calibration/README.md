@@ -10,9 +10,9 @@
 | YOLOv8n end-to-end (decode + NMS) | Yes | 100.6 FPS |
 | NPU utilisation (YOLOv8n) | Yes | 7.2% of rated 13 TOPS |
 | Llama-3.2-1B Q4_K_M (llama.cpp) | No, CPU only | 14.3 tok/s generation, 88.1 tok/s prompt processing |
-| DeiT-tiny vision transformer | Not tested | Hailo compiler needs an x86 machine; none used in this run |
+| Whisper-tiny (transformer) | Yes (prebuilt HEFs) | PRELIMINARY: runs on the HAT; mean RTF about 0.19 vs about 0.30 on the CPU (3 non-speech clips, 1 pass, accuracy not measured) |
 
-**Verdict (provisional):** good at CNN vision, and there is no evidence here that the HAT helps with LLMs. The LLM test ran on the CPU alone, and transformer support on the Hailo-8L was not tested.
+**Verdict (provisional):** good at CNN vision; Whisper-tiny also runs on the HAT using Hailo's prebuilt HEFs, so it is not CNN-only, but that comparison is preliminary (non-speech clips, no repeats, no accuracy measure). LLMs are unsupported on the 8L per Raspberry Pi's documentation (not measured here); the LLM baseline ran on the CPU alone.
 
 **Read before citing:**
 - The YOLOv8n predictions were set after pilot runs on the same rig, so the 4/4 interval hit rate is pilot-informed, not a blind forecast. The bottleneck call (predicted host CPU, measured NPU-side) was a miss.

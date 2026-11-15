@@ -34,3 +34,10 @@
 **Impact on pre-registration:** Original `q5_transformer_tier = T0` assumed a model that might fail to compile. Whisper-tiny already has a published 8L path, so T0 (compiler failure) is no longer the relevant null. New prediction (below) replaces it for scoring.
 
 **No other protocol changes.**
+
+## Whisper run corrections (logged 2026-11-15T18:17:30Z)
+
+- results/summary.md was overwritten in commit 399b8a7 and lost the YOLOv8n and LLM content; restored from 9c74176 with a preliminary Whisper section appended.
+- The Whisper summary gave CPU RTF as 0.030; the raw file data/raw/whisper/cpu/results.json shows about 0.30. Corrected.
+- The three Whisper test clips are non-speech (identical size and RMS, hallucinated transcripts). No WER was measured. Only one pass per clip was run against a pre-registered minimum of 3 repeats. These Whisper results are preliminary; a re-run with real speech and repeats is planned.
+- Scored against protocol/whisper-prediction.md: CPU RTF and HAT RTF both missed their intervals; the "HAT RTF at most 50% of CPU RTF" criterion was not met (ratio 0.62).
