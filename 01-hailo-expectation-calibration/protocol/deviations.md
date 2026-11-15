@@ -18,3 +18,7 @@
 - **Pilot-informed predictions:** the numerical predictions were set after pilot runs on this same rig (see the 2026-11-15 pilot entry above; pilot Mode A about 108.8 FPS). The YOLOv8n scorecard (interval hit rate, log error) must be read as pilot-informed, not blind forecasts.
 - **Retrospective tag:** annotated tag prereg-01 is being created after the YOLOv8n runs, pointing at bd92298. Its tag date is the tagging time, not the freeze time. The independent deposit is also retrospective and will be linked here once it has a DOI.
 - **Q5 (transformer tier):** frozen as T0 with no stated probability, no model named, and no numeric T3 threshold. The default --t3-min-fps 100 in scripts/check_transformer.py was never pre-registered. As of this entry, no transformer compile or run has been attempted (data/raw/transformers and models/transformers are empty).
+
+## Independent deposit deferred (logged 2026-11-15T17:11:56Z)
+
+- The Zenodo/OSF deposit mentioned above has been deferred by the author. As of this entry the pre-registration has only git-based evidence (commit bd92298, tag prereg-01), which is client-set and unverified. Any claim that predictions pre-date measurement rests on that weaker evidence until an independent deposit or timestamp is added.
