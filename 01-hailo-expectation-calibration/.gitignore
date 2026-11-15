@@ -8,3 +8,4 @@ data/coco/_tmp/
 data/smoke/
 data/raw/_smoke*/
 .DS_Store
+hailort.log
