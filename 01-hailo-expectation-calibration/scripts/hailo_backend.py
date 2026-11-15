@@ -18,7 +18,8 @@ class SimBackend:
     has_nms = True
     name = "sim"
 
-    def __init__(self, hef_path=None, per_frame_s=0.004, **_):
+    def __init__(self, hef_path=None, per_frame_s=0.004, device_batch=1, **_):
+        self.device_batch = device_batch
         self.input_shape = (640, 640, 3)
         self.per_frame_s = per_frame_s
         self.hef_path = hef_path
@@ -53,8 +54,9 @@ class HailoBackend:
     simulated = False
     name = "hailo"
 
-    def __init__(self, hef_path, **_):
+    def __init__(self, hef_path, device_batch=1, **_):
         self.hef_path = hef_path
+        self.device_batch = device_batch
         self.stack = ExitStack()
 
     @staticmethod
@@ -80,6 +82,9 @@ class HailoBackend:
         self.hef = HEF(self.hef_path)
         self.target = self.stack.enter_context(VDevice())
         cfg = ConfigureParams.create_from_hef(self.hef, interface=HailoStreamInterface.PCIe)
+        if self.device_batch > 1:  # device-side batch (context-switch amortisation). Default 1 = pre-registered config.
+            for name in cfg.network_group_params:
+                cfg.network_group_params[name].batch_size = self.device_batch
         self.ng = self.target.configure(self.hef, cfg)[0]
         self.ng_params = self.ng.create_params()
         in_p = self._vparams(InputVStreamParams, self.ng, FormatType.UINT8)
@@ -119,9 +124,9 @@ class HailoBackend:
             return "unknown"
 
 
-def make_backend(kind, hef_path):
+def make_backend(kind, hef_path, device_batch=1):
     if kind == "sim":
-        return SimBackend(hef_path)
+        return SimBackend(hef_path, device_batch=device_batch)
     if kind == "hailo":
-        return HailoBackend(hef_path)
+        return HailoBackend(hef_path, device_batch=device_batch)
     raise ValueError(kind)

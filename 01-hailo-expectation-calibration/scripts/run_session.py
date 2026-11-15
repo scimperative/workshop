@@ -46,6 +46,7 @@ def main():
     ap.add_argument("--min-run", type=int, default=900)
     ap.add_argument("--frames-per-call", type=int, default=8)
     ap.add_argument("--workers", type=int, default=2)
+    ap.add_argument("--device-batch", type=int, default=1)
     ap.add_argument("--images-dir", default=None)
     ap.add_argument("--ambient-c", type=float, default=None, help="room thermometer reading")
     ap.add_argument("--power-source", choices=["none", "shelly-gen1", "shelly-gen2", "tasmota", "http"], default="none")
@@ -90,7 +91,7 @@ def main():
 
         cmd = [sys.executable, str(HERE / "bench.py"), "--hef", a.hef, "--mode", a.mode, "--backend", a.backend,
                "--duration", str(a.duration), "--min-run", str(a.min_run), "--frames-per-call", str(a.frames_per_call),
-               "--workers", str(a.workers), "--outdir", str(d), "--tag", a.tag]
+               "--workers", str(a.workers), "--device-batch", str(a.device_batch), "--outdir", str(d), "--tag", a.tag]
         if not a.fixed_duration:
             cmd.append("--until-steady")
         if a.images_dir:
@@ -103,6 +104,11 @@ def main():
     finally:
         for p in procs:
             stop_proc(p)
+        if a.backend == "hailo" and meta.get("bench_returncode") == 0:
+            # Independent reference (no Python in the loop). Run AFTER loggers stop so it cannot contaminate them.
+            ref = subprocess.run(["hailortcli", "benchmark", a.hef, "-t", "15", "--batch-size", str(a.device_batch)],
+                                 capture_output=True, text=True).stdout
+            (d / "hailortcli_benchmark.txt").write_text(ref)
         (d / "session.json").write_text(json.dumps(meta, indent=2))
     print(f"[DONE] {d}")
     sys.exit(meta.get("bench_returncode", 1))
