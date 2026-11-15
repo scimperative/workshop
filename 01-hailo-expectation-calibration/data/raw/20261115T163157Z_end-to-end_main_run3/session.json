@@ -1,0 +1,32 @@
+{
+  "session_id": "20261115T163157Z_end-to-end_main_run3",
+  "args": {
+    "mode": "end-to-end",
+    "run": 3,
+    "tag": "main",
+    "hef": "/home/patrick/workshop/01-hailo-expectation-calibration/models/yolov8n_h8l.hef",
+    "backend": "hailo",
+    "idle_seconds": 600,
+    "duration": 3600,
+    "fixed_duration": false,
+    "min_run": 900,
+    "frames_per_call": 32,
+    "workers": 2,
+    "device_batch": 1,
+    "images_dir": null,
+    "ambient_c": null,
+    "power_source": "none",
+    "power_url": null,
+    "power_json_path": null,
+    "out_root": "/home/patrick/workshop/01-hailo-expectation-calibration/data/raw"
+  },
+  "soc_temp_at_start_c": 53.8,
+  "ambient_c": null,
+  "git_commit": "331c9153e6ed76ff9d86a5c1e98892807f31cc0a",
+  "simulated": false,
+  "idle_start": 1794760319.976474,
+  "idle_end": 1794760919.9768074,
+  "bench_start": 1794760919.976889,
+  "bench_end": 1794761880.005036,
+  "bench_returncode": 0
+}
