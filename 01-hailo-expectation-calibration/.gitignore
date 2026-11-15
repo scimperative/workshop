@@ -9,3 +9,4 @@ data/smoke/
 data/raw/_smoke*/
 .DS_Store
 hailort.log
+pyhailort.log
