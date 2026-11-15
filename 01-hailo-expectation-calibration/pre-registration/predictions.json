@@ -1,0 +1,20 @@
+{
+  "_instructions": "Frozen pre-registration predictions for Workshop 01",
+  "frozen": true,
+  "predictions": {
+    "q1_fps_mode_a": {"point": 108.0, "low": 102.0, "high": 114.0},
+    "q1_fps_mode_b": {"point": 99.0, "low": 93.0, "high": 105.0},
+    "q2_bottleneck_mode_b": {"value": "host_cpu"},
+    "q3_energy_total_j_per_inf_mode_b": {"point": 0.065, "low": 0.045, "high": 0.090},
+    "q3_energy_idle_sub_j_per_inf_mode_b": {"point": 0.032, "low": 0.020, "high": 0.050},
+    "q4_fps_ratio_steady_over_cold_mode_b": {"point": 0.98, "low": 0.92, "high": 1.02},
+    "q5_transformer_tier": {"value": "T0"},
+    "q6_npu_utilization_mode_a": {"point": 0.072, "low": 0.060, "high": 0.090},
+    "power_w_mode_b": {"point": 6.5, "low": 5.0, "high": 8.0},
+    "latency_p95_ms_mode_a_sync": {"point": 284.0, "low": 270.0, "high": 310.0}
+  },
+  "_allowed_categorical": {
+    "q2_bottleneck_mode_b": ["npu", "pcie", "host_cpu", "thermal"],
+    "q5_transformer_tier": ["T0", "T1", "T2", "T3"]
+  }
+}
