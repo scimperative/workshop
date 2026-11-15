@@ -26,3 +26,11 @@
 ## Independent deposit deferred (logged 2026-11-15T17:12:15Z)
 
 - Zenodo/OSF deposit deferred by the author until after the experiment. Until then, the pre-registration timing rests on git evidence only (commit bd92298, tag prereg-01), which is client-set and unverified.
+
+## 2026-11-15T17:58Z — Transformer workload changed from DeiT-tiny to Whisper-tiny
+
+**Reason:** DeiT-tiny requires Dataflow Compiler (x86-only). No confirmed x86 access. Official hailo-apps speech_recognition app provides prebuilt Whisper-tiny encoder/decoder HEFs for Hailo-8L that work with HailoRT 4.20+ and auto-download. Confirmed HEF URLs return HTTP 200.
+
+**Impact on pre-registration:** Original `q5_transformer_tier = T0` assumed a model that might fail to compile. Whisper-tiny already has a published 8L path, so T0 (compiler failure) is no longer the relevant null. New prediction (below) replaces it for scoring.
+
+**No other protocol changes.**
