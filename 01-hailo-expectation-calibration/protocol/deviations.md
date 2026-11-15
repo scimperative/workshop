@@ -22,3 +22,7 @@
 ## Independent deposit deferred (logged 2026-11-15T17:11:56Z)
 
 - The Zenodo/OSF deposit mentioned above has been deferred by the author. As of this entry the pre-registration has only git-based evidence (commit bd92298, tag prereg-01), which is client-set and unverified. Any claim that predictions pre-date measurement rests on that weaker evidence until an independent deposit or timestamp is added.
+
+## Independent deposit deferred (logged 2026-11-15T17:12:15Z)
+
+- Zenodo/OSF deposit deferred by the author until after the experiment. Until then, the pre-registration timing rests on git evidence only (commit bd92298, tag prereg-01), which is client-set and unverified.
