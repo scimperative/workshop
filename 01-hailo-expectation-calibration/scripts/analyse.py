@@ -272,6 +272,15 @@ def main():
     cat = [r for r in rows if r.get("cat")]
     S = ["# Scorecard", "", f"Generated from {len(sessions)} session(s). Prediction file git commit should predate all runs.", "",
          "| metric | predicted (80% interval) | measured | hit | log10 error |", "|---|---|---|---|---|"]
+    unscored = [r for r in rows if r.get("status")]
+    S[4:4] = [
+        "**Read this first**", "",
+        f"- Numeric: {sum(r['hit'] for r in num)}/{len(num)} intervals hit. Categorical: {sum(r['hit'] for r in cat)}/{len(cat)} hit (Q2 bottleneck is a miss; see Q2 evidence below). The numeric hit rate is not the whole result.",
+        f"- {len(unscored)} predictions have no measurement and are not scored: {', '.join(r['metric'] for r in unscored)}.",
+        "- The numerical predictions were set after pilot runs on this same rig: this is a pilot-informed calibration, not a blind forecast. See protocol/deviations.md.",
+        "- The pre-registration tag (prereg-01) was created after the runs; the independent deposit is retrospective. See protocol/deviations.md.",
+        "",
+    ]
     for r in rows:
         if r.get("status"):
             S.append(f"| {r['metric']} | - | - | {r['status']} | - |")

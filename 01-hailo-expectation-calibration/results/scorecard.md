@@ -2,6 +2,13 @@
 
 Generated from 6 session(s). Prediction file git commit should predate all runs.
 
+**Read this first**
+
+- Numeric: 4/4 intervals hit. Categorical: 0/1 hit (Q2 bottleneck is a miss; see Q2 evidence below). The numeric hit rate is not the whole result.
+- 5 predictions have no measurement and are not scored: q3_energy_total_j_per_inf_mode_b, q3_energy_idle_sub_j_per_inf_mode_b, q5_transformer_tier, power_w_mode_b, latency_p95_ms_mode_a_sync.
+- The numerical predictions were set after pilot runs on this same rig: this is a pilot-informed calibration, not a blind forecast. See protocol/deviations.md.
+- The pre-registration tag (prereg-01) was created after the runs; the independent deposit is retrospective. See protocol/deviations.md.
+
 | metric | predicted (80% interval) | measured | hit | log10 error |
 |---|---|---|---|---|
 | q1_fps_mode_a | 108 (102-114) | 107.4 | YES | -0.003 |
