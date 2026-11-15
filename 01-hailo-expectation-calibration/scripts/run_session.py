@@ -44,7 +44,7 @@ def main():
     ap.add_argument("--duration", type=int, default=3600)
     ap.add_argument("--fixed-duration", action="store_true", help="run the full --duration instead of stopping at steady state")
     ap.add_argument("--min-run", type=int, default=900)
-    ap.add_argument("--frames-per-call", type=int, default=8)
+    ap.add_argument("--frames-per-call", type=int, default=32)
     ap.add_argument("--workers", type=int, default=2)
     ap.add_argument("--device-batch", type=int, default=1)
     ap.add_argument("--images-dir", default=None)

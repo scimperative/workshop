@@ -2,7 +2,7 @@
 """Core inference harness for Workshop 01.
 
 Mode A  (model-only)  : pre-processed tensors held in RAM, fed straight to HailoRT.
-Mode B  (end-to-end)  : 3-stage pipeline: JPEG decode + letterbox on host worker threads -> batching +
+Mode B  (end-to-end)  : 3-stage pipeline: JPEG decode + letterbox in worker PROCESSES -> batching +
                         inference call (main thread) -> result parsing / accounting (post thread).
                         Stages overlap, like a real deployed app, so the A-vs-B gap is not an artefact
                         of serial host work.
@@ -18,6 +18,7 @@ import csv
 import json
 import os
 import platform
+import multiprocessing as mp
 import queue
 import signal
 import sys
@@ -30,6 +31,8 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common  # noqa: E402
 from hailo_backend import make_backend  # noqa: E402
+from decode_proc import decode_worker  # noqa: E402
+from multiprocessing import shared_memory  # noqa: E402
 
 STOP = threading.Event()
 
@@ -47,27 +50,6 @@ def prepare_cache(items, n, size):
     return tensors
 
 
-def decode_worker(items, size, q, worker_id, n_workers):
-    i = worker_id
-    while not STOP.is_set():
-        _, path = items[i % len(items)]
-        t0 = time.perf_counter()
-        try:
-            rgb, meta = common.load_and_letterbox(path, size)
-        except Exception as e:  # keep running, but make it loud
-            print(f"[WARN] decode failed {path}: {e}", file=sys.stderr)
-            i += n_workers
-            continue
-        i += n_workers
-        dec_s = time.perf_counter() - t0
-        while not STOP.is_set():
-            try:
-                q.put((rgb, meta, dec_s), timeout=0.2)
-                break
-            except queue.Full:
-                pass
-
-
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     cfg = common.load_config()
@@ -78,9 +60,9 @@ def main():
     ap.add_argument("--until-steady", action="store_true", help="stop early once thermal+FPS steady state is reached")
     ap.add_argument("--min-run", type=int, default=900, help="earliest steady-state check, seconds")
     ap.add_argument("--warmup", type=int, default=10, help="seconds discarded from summary stats")
-    ap.add_argument("--frames-per-call", type=int, default=8, help="host-side pipelining; device batch is --device-batch")
+    ap.add_argument("--frames-per-call", type=int, default=32, help="host-side pipelining; device batch is --device-batch")
     ap.add_argument("--device-batch", type=int, default=1, help="HailoRT network-group batch size (pre-registered: 1)")
-    ap.add_argument("--workers", type=int, default=2, help="Mode B decode threads")
+    ap.add_argument("--workers", type=int, default=2, help="Mode B decode processes")
     ap.add_argument("--cache-images", type=int, default=64, help="Mode A: distinct pre-processed tensors")
     ap.add_argument("--images-dir", default=None, help="override dataset (smoke tests)")
     ap.add_argument("--outdir", default=None)
@@ -110,12 +92,26 @@ def main():
     if e2e and not be.has_nms:
         print("[WARN] HEF has raw (non-NMS) outputs: Mode B will time decode+inference but NOT post-processing.")
 
-    dq = queue.Queue(maxsize=max(16, fpc * 4))   # decoded frames
     pq = queue.Queue(maxsize=4)                  # inferred batches awaiting post-processing
     cache = None
+    procs, shm, ring, free_q, ready_q, stop_ev = [], None, None, None, None, None
     if e2e:
+        ctx = mp.get_context("spawn")            # never fork after HailoRT has opened the device
+        nslots = max(32, fpc * 2)
+        shm = shared_memory.SharedMemory(create=True, size=nslots * size * size * 3)
+        ring = np.ndarray((nslots, size, size, 3), np.uint8, buffer=shm.buf)
+        free_q, ready_q, stop_ev = ctx.Queue(), ctx.Queue(), ctx.Event()
+        for sl in range(nslots):
+            free_q.put(sl)
+        paths = [p for _, p in items]
         for w in range(a.workers):
-            threading.Thread(target=decode_worker, args=(items, size, dq, w, a.workers), daemon=True).start()
+            pr = ctx.Process(target=decode_worker, args=(paths, size, shm.name, nslots, free_q, ready_q, stop_ev, w, a.workers), daemon=True)
+            pr.start()
+            procs.append(pr)
+        t_wait = time.time()
+        while ready_q.empty() and time.time() - t_wait < 60:
+            time.sleep(0.05)
+        print(f"[INFO] Mode B: {a.workers} decode processes up, ring of {nslots} slots")
     else:
         cache = prepare_cache(items, a.cache_images, size)
         print(f"[INFO] Mode A: {len(cache)} tensors pre-loaded")
@@ -193,17 +189,21 @@ def main():
     try:
         while not STOP.is_set() and (time.perf_counter() - loop_start) < a.duration:
             if e2e:
-                batch, metas, starts = [], [], []
-                while len(batch) < fpc and not STOP.is_set():
+                batch = np.empty((fpc, size, size, 3), np.uint8)
+                metas, starts = [], []
+                k = 0
+                while k < fpc and not STOP.is_set():
                     try:
-                        rgb, meta, dec_s = dq.get(timeout=0.5)
+                        slot, meta, dec_s = ready_q.get(timeout=0.5)
                     except queue.Empty:
                         continue
+                    batch[k] = ring[slot]
+                    free_q.put(slot)
                     # latency start = dequeue time minus this frame's own decode time (queue wait excluded)
-                    batch.append(rgb); metas.append(meta); starts.append(time.perf_counter() - dec_s)
-                if len(batch) < fpc:
+                    metas.append(meta); starts.append(time.perf_counter() - dec_s)
+                    k += 1
+                if k < fpc:
                     break
-                batch = np.stack(batch)
             else:
                 batch = np.stack([cache[(idx + k) % len(cache)] for k in range(fpc)])
                 idx = (idx + fpc) % len(cache)
@@ -220,6 +220,15 @@ def main():
         STOP.set()
         pq.put(None)
         post.join(timeout=30)
+        if e2e:
+            stop_ev.set()
+            for pr in procs:
+                pr.join(timeout=3)
+                if pr.is_alive():
+                    pr.terminate()
+            del ring
+            shm.close()
+            shm.unlink()
         sec_f.close()
         end_t = time.perf_counter() - loop_start
         be.close()
@@ -231,7 +240,7 @@ def main():
             "mode": a.mode, "tag": a.tag, "simulated": bool(be.simulated), "backend": a.backend,
             "hef": a.hef, "hef_sha256": common.sha256_file(a.hef) if os.path.exists(a.hef) else None,
             "frames_per_call": fpc, "device_batch": a.device_batch, "workers": a.workers if e2e else 0,
-            "pipeline": "3-stage (decode threads -> infer -> post thread)" if e2e else "2-stage (infer -> post thread)",
+            "pipeline": "3-stage (decode PROCESSES + shared-memory ring -> infer -> post thread)" if e2e else "2-stage (infer -> post thread)",
             "duration_s": end_t, "warmup_s": a.warmup, "stop_reason": S["stop_reason"], "error": err,
             "total_frames": S["total_frames"], "measured_frames": measured_frames,
             "fps_overall_post_warmup": measured_frames / measured_dur,

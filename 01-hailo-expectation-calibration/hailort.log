@@ -1,3 +1,0 @@
-[2026-11-15 12:47:51.074] [2477] [HailoRT] [info] [device.cpp:49] [Device] OS Version: Linux 6.12.115+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.115-1+rpt1 (2026-11-03) aarch64
-[2026-11-15 12:47:51.076] [2477] [HailoRT] [info] [control.cpp:108] [control__parse_identify_results] firmware_version is: 4.20.0
-[2026-11-15 12:47:51.077] [2477] [HailoRT] [info] [control.cpp:108] [control__parse_identify_results] firmware_version is: 4.20.0
