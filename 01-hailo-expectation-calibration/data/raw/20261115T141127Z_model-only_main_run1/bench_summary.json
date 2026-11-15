@@ -1,0 +1,13 @@
+{
+  "simulated": false,
+  "mode": "model-only",
+  "tag": "main",
+  "warmup_s": 60.0,
+  "stop_reason": "completed",
+  "duration_s": 1005.0,
+  "latency_ms": {
+    "p50": 28.5,
+    "p95": 32.1,
+    "p99": 35.0
+  }
+}

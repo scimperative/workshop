@@ -1,0 +1,13 @@
+{
+  "simulated": false,
+  "mode": "end-to-end",
+  "tag": "main",
+  "warmup_s": 60.0,
+  "stop_reason": "completed",
+  "duration_s": 873.0,
+  "latency_ms": {
+    "p50": 65.0,
+    "p95": 75.0,
+    "p99": 82.0
+  }
+}
