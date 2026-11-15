@@ -1,0 +1,20 @@
+{
+  "variant": "hailo8l",
+  "rated_tops": 13.0,
+  "model_name": "yolov8n",
+  "imgsz": 640,
+  "model_flops_per_inference": 8.7e9,
+  "flops_note": "Ultralytics-reported 8.7 GFLOPs for YOLOv8n@640 counts FLOPs (=2*MACs). Rated TOPS also counts 1 MAC = 2 ops. VERIFY before pre-registering.",
+  "dataset_size": 500,
+  "dataset_seed": 0,
+  "dataset_source": "COCO val2017",
+  "score_threshold": 0.25,
+  "default_hef": "models/yolov8n_h8l.hef",
+  "hef_candidates": [
+    "https://hailo-model-zoo.s3.eu-west-2.amazonaws.com/ModelZoo/Compiled/v2.14.0/hailo8l/yolov8n.hef",
+    "https://hailo-model-zoo.s3.eu-west-2.amazonaws.com/ModelZoo/Compiled/v2.13.0/hailo8l/yolov8n.hef"
+  ],
+  "coco_annotations_zip": "http://images.cocodataset.org/annotations/annotations_trainval2017.zip",
+  "coco_image_base": "http://images.cocodataset.org/val2017/",
+  "pcie_gen_target": 3
+}

@@ -1,0 +1,20 @@
+{
+  "_instructions": "Copy to predictions.json, replace every null, set frozen=true, COMMIT AND PUSH, deposit on OSF/Zenodo, and only then run benchmarks. Each numeric entry needs point + 80% interval (low/high). Categorical entries use {value}. Run `python scripts/ceiling.py` first for the first-principles anchor.",
+  "frozen": false,
+  "predictions": {
+    "q1_fps_mode_a": {"point": null, "low": null, "high": null},
+    "q1_fps_mode_b": {"point": null, "low": null, "high": null},
+    "q2_bottleneck_mode_b": {"value": null},
+    "q3_energy_total_j_per_inf_mode_b": {"point": null, "low": null, "high": null},
+    "q3_energy_idle_sub_j_per_inf_mode_b": {"point": null, "low": null, "high": null},
+    "q4_fps_ratio_steady_over_cold_mode_b": {"point": null, "low": null, "high": null},
+    "q5_transformer_tier": {"value": null},
+    "q6_npu_utilization_mode_a": {"point": null, "low": null, "high": null},
+    "power_w_mode_b": {"point": null, "low": null, "high": null},
+    "latency_p95_ms_mode_a_sync": {"point": null, "low": null, "high": null}
+  },
+  "_allowed_categorical": {
+    "q2_bottleneck_mode_b": ["npu", "pcie", "host_cpu", "thermal"],
+    "q5_transformer_tier": ["T0", "T1", "T2", "T3"]
+  }
+}
