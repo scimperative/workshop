@@ -5,10 +5,10 @@
 > **A public, accumulating record of pre-registered physical measurements that test first-principles models against real hardware.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Status: Prediction record empty](https://img.shields.io/badge/Status-0_runs-lightgrey)](https://scimperative.com/?view=workshop)
+[![Status: 1 published run](https://img.shields.io/badge/Status-1_published_run-lightgrey)](https://scimperative.com/?view=workshop)
 
 Part of the [Silicon Carbide Imperative](https://scimperative.com) — first-principles engineering, economics and geopolitics where machines meet physical reality.  
-Companion to the [Sandbox](https://github.com/scimperative/sandbox) (checkable models) and the [Library](https://scimperative.substack.com) (reasoning and implications).
+Companion to the [Sandbox](https://github.com/scimperative/sandbox) (checkable models) and the [Library](https://scimperative.com/?view=library) (an index of written research).
 
 ---
 
@@ -26,12 +26,11 @@ Every run follows the same discipline:
 
 The result is a growing, timestamped, publicly scored record of how often models and claims fall inside their stated uncertainty bands when tested against physical reality.
 
-**Current status:** the prediction record is empty. No Workshop run has been published yet. Shipping the first clean runs is the highest-leverage near-term action.
+**Current status:** one completed run is published: [Workshop 01](01-hailo-expectation-calibration/README.md), a Raspberry Pi 5 and Hailo-8L measurement. Four numerical intervals hit (4/4); the categorical bottleneck prediction missed (0/1). The numerical predictions were pilot-informed, not blind forecasts, and five planned metrics remain unmeasured. See the run's scorecard for details.
 
-**Headline numbers (the scoreboard):**  
-Predictions made · Predictions within stated range · Median error · Notable systematic biases.
+**Current headline numbers:** 4/4 numerical intervals hit; 0/1 categorical predictions hit; mean absolute log10 error 0.005 across the scored numerical metrics. This is one pilot-informed run, not a broad calibration estimate.
 
-Today: **0 / — / — / —**
+See the [scorecard](01-hailo-expectation-calibration/results/scorecard.md) and [gap analysis](01-hailo-expectation-calibration/results/gap-analysis.md).
 
 ---
 
@@ -48,9 +47,9 @@ Today: **0 / — / — / —**
 
 ## Run Index
 
-| Run | Title | Hardware | Status | Prediction window |
+| Run | Title | Hardware | Status | Scored outcome |
 | :--- | :--- | :--- | :--- | :--- |
-| — | *No runs published yet* | — | — | — |
+| 01 | [Calibrating Expectations for Raspberry Pi 5 + Hailo AI HAT+](01-hailo-expectation-calibration/README.md) | Raspberry Pi 5 + Hailo-8L AI HAT+ | Complete for stated scope | 4/4 numerical intervals; 0/1 categorical predictions |
 
 Runs will be numbered sequentially (`01-…`, `02-…`) and referred to publicly as **Workshop 01**, **Workshop 02**, etc.
 
@@ -61,18 +60,17 @@ Runs will be numbered sequentially (`01-…`, `02-…`) and referred to publicly
 ```
 workshop/
 ├── README.md
-├── 01-<short-slug>/          # One folder per run
-│   ├── README.md             # Prediction, protocol summary, results, gap, scope note
-│   ├── prediction/           # Pre-registered prediction + uncertainty (timestamped)
-│   ├── protocol/             # Exact protocol, equipment list, environmental constraints
-│   ├── data/                 # Raw measurements, logs, photos, intermediate files
-│   ├── analysis/             # Gap calculation, figures, notebooks (if any)
-│   └── meta.yaml             # Structured metadata (run id, dates, hardware, versions)
-├── 02-...
-└── shared/                   # Optional common helpers, schemas, plotting utilities
+├── assets/
+└── 01-hailo-expectation-calibration/
+    ├── README.md
+    ├── pre-registration/     # Frozen predictions and templates
+    ├── protocol/             # Procedure, deviations, and addenda
+    ├── data/                 # Raw measurements, logs, and manifests
+    ├── results/              # Summary, scorecard, gap analysis, and figures
+    └── scripts/              # Measurement and analysis tools
 ```
 
-Each run is self-contained. Shared helpers may exist for consistency of metadata or plotting, but the measurement record itself lives inside the numbered folder.
+Each run is self-contained. New runs should follow the same evidence-first structure while documenting any deliberate deviations.
 
 ---
 
@@ -113,9 +111,9 @@ The primary audience is future-self, serious technical readers thinking about ph
 | :--- | :--- |
 | **Workshop** (this repository) | Produces the irreversible measurement record. |
 | **Sandbox** | Makes the underlying models checkable and visible; later carries “measured against hardware” badges that link here. |
-| **Library** | Explains the physical reasoning, the motivation for a given measurement, and what the observed gaps teach about binding constraints. |
+| **Library** | Indexes written research and links to original Substack articles, including pieces relevant to a measurement. |
 
-Library pieces link to tools and to runs. Tool pages link back to Substack and to this repository. The measurement record is the primary compounding asset.
+Library entries link to the original articles; those articles may link to tools and runs. The measurement record is the primary compounding asset.
 
 ---
 
@@ -154,8 +152,9 @@ Measurement data and protocols are released under the same licence unless a spec
 
 - Main site: [scimperative.com](https://scimperative.com)
 - Workshop view: [scimperative.com/?view=workshop](https://scimperative.com/?view=workshop)
+- Library view: [scimperative.com/?view=library](https://scimperative.com/?view=library)
 - Sandbox: [github.com/scimperative/sandbox](https://github.com/scimperative/sandbox)
-- Library: [scimperative.substack.com](https://scimperative.substack.com)
+- Substack: [scimperative.substack.com](https://scimperative.substack.com)
 - Organisation: [github.com/scimperative](https://github.com/scimperative)
 
 ---
